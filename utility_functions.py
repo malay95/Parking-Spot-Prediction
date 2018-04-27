@@ -1,13 +1,15 @@
 
 # coding: utf-8
 
-# In[5]:
+# In[1]:
 
 
 import pandas as pd
 from math import sqrt
 from sklearn.metrics import mean_squared_error
 import numpy as np
+import matplotlib.pyplot as plt
+get_ipython().magic('matplotlib inline')
 
 #actual = actual values of y data
 #predicted - predicted values of the test set
@@ -25,43 +27,41 @@ def r2(predicted,actual=actual_):
     final = 1 - (rss/tss)
     return final
 
-def accuracy_tolerance(pred_set,act_set=actual_,  tolerance=10.0):
-    if len(pred_set) != len(act_set):
+def accuracy_tolerance(predicted, actual=actual_, tolerance=10.0):
+    if len(predicted) != len(actual):
         raise ValueError('prediction and actual set lengths dont match')
     
-    n = len(pred_set)
+    n = len(predicted)
     count = 0
     for i in range(n):
-        if abs(pred_set[i] - act_set[i]) <= tolerance: count += 1
+        if abs(predicted[i] - actual[i]) <= tolerance: count += 1
     acc = float(count) / float(n)
     return acc
 
-def calculate_accuracy(predicted,model_name='No Name',actual=actual_):
+def calculate_accuracy(predicted,actual=actual_, model_name='No Name',):
     #call this function to get all accuracies as a dictionary
     d = {}
     d['name'] = model_name
-    d['r2'] = r2(actual,predicted)
-    d['tol'] = accuracy_tolerance(actual,predicted)
-    d['rms'] = rms(actual,predicted)
+    d['r2'] = r2(predicted,actual)
+    d['tol'] = accuracy_tolerance(predicted,actual)
+    d['rms'] = rms(predicted,actual)
     return d
 
-def plot_graph(y_pred, y_act=actual_):
+def plot_graph(predicted, actual=actual_):
     # y_pred : 1D array predicted values
     # y_act : 1D array actual values
-    if (len(y_act)!=100):
-        raise ValueError('Test set should contain 100 values only')
-    if (len(y_pred) != len(y_act)):
+    
+    if (len(predicted) != len(actual)):
         raise ValueError('actual and predicted values dont have the same lengths')
         
-    x = [i for i in range(len(y_pred))]
+    x = [i for i in range(len(predicted))]
     plt.figure(figsize=(8, 4))
-    plt.plot(x, y_pred, 'r-', label='Predicted')
-    plt.plot(x, y_act, 'b-', label='Actual')
+    plt.plot(x, predicted, 'r-', label='Predicted')
+    plt.plot(x, actual, 'b-', label='Actual')
     axes = plt.gca()
     axes.set_ylim([0, 200])
     plt.ylabel('available spots')
     plt.xlabel('time')
-    plt.legend(loc='best')
-#     plt.xticks(x)
     plt.legend()
     plt.show()
+
